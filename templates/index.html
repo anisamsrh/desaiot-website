@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalcer Watch - Setup Darurat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 min-h-screen py-10 px-4">
+
+    <div class="max-w-md mx-auto">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Kalcer Watch</h1>
+            <p class="text-gray-500 text-sm">Realtime Database Manager</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+            <h2 class="text-xs font-bold text-gray-400 uppercase mb-3">Tambah Kontak Baru</h2>
+            <form action="/add" method="post" class="space-y-3">
+                <input type="text" name="name" required placeholder="Nama (ex: Ayah)" 
+                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex gap-2">
+                    <input type="text" name="phone" required placeholder="+628..." 
+                        class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700 transition">
+                        <i class="ph ph-plus text-xl"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                <span class="text-xs font-bold text-gray-500 uppercase">Daftar Kontak</span>
+                <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-bold">{{ contacts|length }}</span>
+            </div>
+
+            <ul class="divide-y divide-gray-100">
+                {% for contact in contacts %}
+                <li class="p-4 flex justify-between items-center group hover:bg-blue-50 transition">
+                    <div>
+                        <p class="font-bold text-gray-800">{{ contact.name }}</p>
+                        <p class="text-sm text-gray-500 font-mono">{{ contact.phone }}</p>
+                    </div>
+                    <form action="/delete/{{ contact.id }}" method="post" onsubmit="return confirm('Hapus kontak ini?');">
+                        <button type="submit" class="text-gray-300 hover:text-red-500 transition p-2">
+                            <i class="ph ph-trash text-xl"></i>
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="p-8 text-center text-gray-400 italic text-sm">
+                    Belum ada kontak di database /kontakDarurat.
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+    </div>
+</body>
+</html>

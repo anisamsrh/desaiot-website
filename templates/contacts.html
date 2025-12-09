@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalcer Watch - Kontak Darurat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 min-h-screen py-10 px-4">
+
+    <div class="max-w-md mx-auto">
+        
+        <a href="/" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 mb-6 transition font-medium">
+            <i class="ph-bold ph-arrow-left"></i> Kembali ke Dashboard
+        </a>
+
+        <div class="text-center mb-8">
+            <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-600">
+                <i class="ph-fill ph-users text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800">Kontak Darurat</h1>
+            <p class="text-slate-500 text-sm">Nomor ini akan dihubungi jika terjadi anomali.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-6">
+            <form action="/contacts/add" method="post" class="space-y-3">
+                <input type="text" name="name" required placeholder="Nama (ex: Ibu)" 
+                    class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                <div class="flex gap-2">
+                    <input type="text" name="phone" required placeholder="+628..." 
+                        class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                    <button type="submit" class="bg-indigo-600 text-white px-4 rounded-lg hover:bg-indigo-700 transition">
+                        <i class="ph-bold ph-plus text-lg"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-500 uppercase">Terdaftar</span>
+                <span class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full font-bold">{{ contacts|length }}</span>
+            </div>
+
+            <ul class="divide-y divide-slate-100">
+                {% for contact in contacts %}
+                <li class="p-4 flex justify-between items-center group hover:bg-slate-50 transition">
+                    <div>
+                        <p class="font-bold text-slate-800">{{ contact.name }}</p>
+                        <p class="text-sm text-slate-500 font-mono">{{ contact.phone }}</p>
+                    </div>
+                    <form action="/contacts/delete/{{ contact.id }}" method="post" onsubmit="return confirm('Hapus kontak ini?');">
+                        <button type="submit" class="text-slate-300 hover:text-red-500 transition p-2">
+                            <i class="ph-bold ph-trash text-lg"></i>
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="p-8 text-center text-slate-400 italic text-sm">
+                    Belum ada kontak darurat.
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-6">
+            <h2 class="text-xs font-bold text-slate-400 uppercase mb-3">Tambah Kontak Telegram</h2>
+            
+            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-xs text-blue-700">
+                <strong>Cara dapat ID:</strong> Minta kontak darurat chat ke Bot Telegram kamu, ketik <code>/start</code> atau gunakan <code>@userinfobot</code> untuk melihat ID angka mereka.
+            </div>
+
+            <form action="/contacts/add" method="post" class="space-y-3">
+                <input type="text" name="name" required placeholder="Nama (ex: Ayah)" 
+                    class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                
+                <input type="text" name="phone" required placeholder="Nomor HP (Display Only)" 
+                    class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+
+                <div class="flex gap-2">
+                    <input type="text" name="chat_id" required placeholder="Telegram Chat ID (ex: 123456789)" 
+                        class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-mono">
+                    
+                    <button type="submit" class="bg-indigo-600 text-white px-4 rounded-lg hover:bg-indigo-700 transition flex-shrink-0">
+                        <i class="ph-bold ph-plus text-lg"></i> Tambah
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <ul class="divide-y divide-slate-100">
+            {% for contact in contacts %}
+            <li class="p-4 flex justify-between items-center group hover:bg-slate-50 transition">
+                <div>
+                    <p class="font-bold text-slate-800">{{ contact.name }}</p>
+                    <div class="flex gap-3 text-xs text-slate-500 font-mono mt-1">
+                        <span class="flex items-center gap-1"><i class="ph-fill ph-phone"></i> {{ contact.phone }}</span>
+                        <span class="flex items-center gap-1 bg-slate-100 px-1 rounded"><i class="ph-fill ph-robot"></i> ID: {{ contact.chat_id }}</span>
+                    </div>
+                </div>
+                <form action="/contacts/delete/{{ contact.id }}" method="post" onsubmit="return confirm('Hapus kontak ini?');">
+                    <button type="submit" class="text-slate-300 hover:text-red-500 transition p-2">
+                        <i class="ph-bold ph-trash text-lg"></i>
+                    </button>
+                </form>
+            </li>
+            {% else %}
+            {% endfor %}
+        </ul>
+        
+    </div>
+</body>
+</html>
